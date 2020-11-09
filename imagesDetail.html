@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <link rel="icon" href="images/favicon.ico">
+  <link rel="apple-touch-icon" sizes="16x16" href="images/favicon.ico">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animation.css">
+  <link rel="stylesheet" href="css/media.css">
+  <title>Hubble Space Project</title>
+</head>
+
+<body>
+
+  <div class="wrap">
+    <header class="on">
+      <div class="center clear">
+        <h2 class="logo"><img src="images/logo_black.png" alt=""></h2>
+        <ul class="gnb">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About Hubble</a></li>
+          <li><a href="images.html">Space Images</a></li>
+          <li><a href="videos.html">Videos</a></li>
+          <li class="last"><a href="news.html">News</a></li>
+          <span></span>
+        </ul>
+
+        <div class="menuBtn">
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="imgDetail section">
+      <div class="center">
+        <div class="secTit">
+
+        </div>
+        <div class="imgDetailBox">
+
+        </div>
+        <div class="detailBtns">
+          <a href="#" class="prev"><i class="fa fa-arrow-left"></i><em>Prev</em></a>
+          <a href="images.html" class="viewLink">View All Images</a>
+          <a href="#" class="next"><em>Next</em><i class="fa fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="center">
+        <p>all contents are from NASA, hubblesite.org. if you want to see more and detailed contents, visit || <a
+            href="http://www.hubblesite.org">www.hubblesite.org</a></p>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="js/custom.js"></script>
+  <script src="js/subHeader.js"></script>
+  <script>
+    $(document).ready(function () {
+      var locaNum = $(location).attr('href').split("=").reverse()[0];
+      var nLocaNum = Number(locaNum);
+      var titleCon = [];
+      var imgCon = [];
+      //console.log(typeof (nLocaNum));
+
+      function getImages(count) {
+        $.ajax({
+          url: "http://hubblesite.org/api/v3/image/" + count,
+          dataType: 'jsonp',
+          success: function (data) {
+            console.log(data);
+            titleCon = `<h1>${data.name}</h1>
+              <p>${data.description}</p>`;
+            imgCon = `<img src="http:${data.image_files[4].file_url}" alt="">`;
+            $(".secTit").append(titleCon);
+            $(".imgDetailBox").append(imgCon);
+          }
+        });
+      }
+
+      if (nLocaNum === 48) {
+        $(".next").text("Visit Hubble Site");
+      }
+
+      $(".detailBtns a").click(function () {
+        if ($(this).hasClass("prev")) {
+          if (nLocaNum === 1) {
+            return false;
+          } else {
+            location.replace('imagesDetail.html?num=' + (nLocaNum - 1));
+          }
+        } else if ($(this).hasClass("next")) {
+          if (nLocaNum >= 48) {
+            $(".next").attr("href", "http://www.hubblesite.org");
+          } else {
+            location.replace('imagesDetail.html?num=' + (nLocaNum + 1));
+          }
+        }
+      });
+
+      getImages(nLocaNum);
+    });
+  </script>
+</body>
+
+</html>
